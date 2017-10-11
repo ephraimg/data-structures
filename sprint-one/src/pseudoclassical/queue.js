@@ -1,6 +1,21 @@
 var Queue = function() {
-  // Hey! Rewrite in the new style. Your code will wind up looking very similar,
-  // but try not not reference your old code in writing the new style.
+  this.max = 0;
+  this.min = 0;
 };
 
+Queue.prototype.size = function () {
+  return this.max - this.min;
+};
+
+Queue.prototype.enqueue = function (value) {
+  this[this.max] = value;
+  this.max++;
+};
+
+Queue.prototype.dequeue = function () {
+  if (this.max - this.min > 0) {
+    this.min++;
+    return this[this.min - 1]; 
+  }
+};
 
