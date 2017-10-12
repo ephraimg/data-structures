@@ -32,6 +32,7 @@ var LinkedList = function() {
     };
     return searchList(list.head);
   };
+  
   return list;
 };
 
