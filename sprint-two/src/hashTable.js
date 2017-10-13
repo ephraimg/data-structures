@@ -21,31 +21,21 @@ var HashTable = function() {
 
 
 
-HashTable.prototype.insert = function(k, v) {
-  if (this.needsDoubling()) { this.double(); }
-   
+HashTable.prototype.insert = function(k, v) {   
   var index = getIndexBelowMaxForKey(k, this._limit);
-  
-  var found = false;
-  
-  //console.log(this._storage.get(index));
-    
+  var found = false;  
+  //console.log(this._storage.get(index));   
   for (var i = 0; i < this._storage.get(index).length; i++) {
     if (this._storage.get(index)[i][0] === k) {
-      
       this._storage.get(index)[i][1] = v;
-      
       found = true;
     }
   }
-  
   if (!found) {
-    
     this._storage.get(index).push([k, v]); // now bucket should be [[k, v]]
-    
-  this._insertCount++;
+    this._insertCount++;
   }
-  
+  if (this.needsDoubling()) { this.double(); }
 };
 
 
@@ -102,9 +92,6 @@ HashTable.prototype.retrieve = function(k) {
 };
 
 HashTable.prototype.remove = function(k) {
-  
-  this.halveIfNeeded();
-  
   var index = getIndexBelowMaxForKey(k, this._limit);
   var bucket = this._storage.get(index);
   if (bucket !== undefined) {
@@ -115,6 +102,7 @@ HashTable.prototype.remove = function(k) {
       }
     }
   }
+  if (this.needsHalving()) { this.halve(); }
 };
 
 HashTable.prototype.needsDoubling = function() {
@@ -122,50 +110,45 @@ HashTable.prototype.needsDoubling = function() {
 };
 
 HashTable.prototype.saveTuples = function() {
-  // create temp storage array
   var temp = [];
-  // get every pair in ht, push to temp
   this._storage.each((bucket, idx) => {
-    console.log('bucket ', idx, ': ', JSON.stringify(bucket));
     if (bucket) {
       for (let i = 0; i < bucket.length; i++) {
         temp.push(bucket[i]);
       }
     }
   });
-  //console.log(JSON.stringify(temp));
   return temp;
 };
 
 HashTable.prototype.double = function() {
-  // // create temp storage array
-  // var temp = [];
-  // // get every pair in ht, push to temp
-  // this._storage.each(bucket => {
-  //   for (let i = 0; i < bucket.length; i++) {
-  //     temp.push(bucket[i]);
-  //   }
-  // });
-  
-  this._limit = this._limit * 2;
+  var temp = this.saveTuples();
+  this._limit = this._limit * 2; 
   this._storage = LimitedArray(this._limit);
-  
-  // var temp = this.saveTuples();
-  
-  // // remove every pair from ht
-  // for (let i = 0; i < temp.length; i++) {
-  //   this._storage.remove(temp[i][0]);
-  // }
-  // // insert every pair from temp back into ht
-
-  
-  // for (let i = 0; i < temp.length; i++) {
-  //   this.insert(temp[i][0], temp[i][1]);
-  // }
+  this._insertCount = 0;
+  for (var i = 0; i < this._limit; i++) {
+    this._storage.set(i, []);
+  }
+  for (let i = 0; i < temp.length; i++) {
+    this.insert(temp[i][0], temp[i][1]);
+  }
 };
 
-HashTable.prototype.halveIfNeeded = function() {
-  if (this._insertCount / this._limit > 0.75) console.log('Needs to be double');  
+HashTable.prototype.needsHalving = function() {
+  return this._insertCount / this._limit < 0.25;
+};
+
+HashTable.prototype.halve = function() {
+  var temp = this.saveTuples();
+  this._limit = this._limit / 2; 
+  this._storage = LimitedArray(this._limit);
+  this._insertCount = 0;
+  for (var i = 0; i < this._limit; i++) {
+    this._storage.set(i, []);
+  }
+  for (let i = 0; i < temp.length; i++) {
+    this.insert(temp[i][0], temp[i][1]);
+  }
 };
 
 /*

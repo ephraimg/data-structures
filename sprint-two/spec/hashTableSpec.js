@@ -64,14 +64,10 @@ describe('hashTable', function() {
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
   
+  // Doesn't work if the table correctly doubles when too full
   it ('should detect on inserting whether it\'s too full', function() {
-    _.each(people, function(person) {
-      var firstName = person[0];
-      var lastName = person[1];
-      hashTable.insert(firstName, lastName);
-    });
+    hashTable._insertCount = 7;
     expect(hashTable.needsDoubling()).to.be.true;
-    
   });
   
   it ('should create a new array with all the tuples', function() {
@@ -80,13 +76,10 @@ describe('hashTable', function() {
     hashTable.insert('Liz', 'Penny');
     hashTable.insert('Joe2', 'Bloggs2');
     hashTable.insert('Joe3', 'Bloggs3');
-    hashTable.insert('Joe4', 'Bloggs4');
-    hashTable.insert('Joe5', 'Bloggs5');
     var temp = hashTable.saveTuples();
-    console.log(JSON.stringify(temp));    
+    //console.log(JSON.stringify(temp));    
     expect(temp).to.eql([["Joe2","Bloggs2"],
-      ["Joe3","Bloggs3"],["Joe4","Bloggs4"],
-      ["Joe5","Bloggs5"],["Lamar","Alexander"],
+      ["Joe3","Bloggs3"],["Lamar","Alexander"],
       ["Joe","Bloggs"],["Liz","Penny"]]);
   });
   
@@ -101,14 +94,16 @@ describe('hashTable', function() {
       var firstName = person[0];
       var lastName = person[1];
       hashTable.insert(firstName, lastName);
-      //console.log('Spec: old hashtable storage: ', JSON.stringify(hashTable._storage));
+      //console.log('Spec: insertCount is: ', hashTable._insertCount);
+      //console.log('Spec: needsDoubling? ', hashTable.needsDoubling());
+      //JSON.stringify(hashTable._storage));
 
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
     expect(hashTable._limit).to.equal(16);
   });
 
-  xit ('should halve in size when needed', function() {
+  it ('should halve in size when needed', function() {
     console.log('Double test over');
     _.each(people, function(person) {
       var firstName = person[0];
