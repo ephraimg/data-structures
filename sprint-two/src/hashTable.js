@@ -1,5 +1,3 @@
-
-
 var HashTable = function() {
   this._insertCount = 0;
   this._limit = 8;
@@ -10,16 +8,6 @@ var HashTable = function() {
     this._storage.set(i, []);
   }
 };
-
-
-
-
-
-
-
-
-
-
 
 HashTable.prototype.insert = function(k, v) {   
   var index = getIndexBelowMaxForKey(k, this._limit);
@@ -37,49 +25,6 @@ HashTable.prototype.insert = function(k, v) {
   }
   if (this.needsDoubling()) { this.double(); }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// HashTable.prototype.insert = function(k, v) {
-  
-//   if (this.needsDoubling()) { this.double(); } 
-  
-//   var index = getIndexBelowMaxForKey(k, this._limit);
-//   var bucket = this._storage.get(index);
-//   if (bucket === undefined) {
-//     this._storage.set(index, []); // [] is our bucket
-//     bucket = this._storage.get(index);
-//   }
-//   var found = false;
-//   for (var i = 0; i < bucket.length; i++) {
-//     if (bucket[i][0] === k) {
-//       bucket[i][1] = v;
-//       found = true;
-//     }
-//   }
-//   if (!found) {
-//     bucket.push([k, v]); // now bucket should be [[k, v]]
-//     //console.log('insert bucket: ', JSON.stringify(bucket));
-//     //console.log('insert storage: ', this._storage);
-//     this._insertCount++;
-//   }
-//   // this._storage.set(index, bucket [k, v]);
-// };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);

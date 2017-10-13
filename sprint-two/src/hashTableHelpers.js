@@ -28,12 +28,6 @@ var LimitedArray = function(limit) {
       callback(storage[i], i, storage);
     }
   };
-  
-  // temp, to delete later
-  
-  limitedArray.logStorage = function() {
-    console.log(JSON.stringify(storage));
-  };
 
   var checkLimit = function(index) {
     if (typeof index !== 'number') {
