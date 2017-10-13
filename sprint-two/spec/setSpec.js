@@ -17,13 +17,34 @@ describe('set', function() {
     expect(set.contains('Danny Glover')).to.equal(true);
     expect(set.contains('Susan Sarandon')).to.equal(true);
   });
+  
+  it('should count the values added to a set', function() {
+    set.add('Susan Sarandon');
+    set.add('Danny Glover');
+    set.add('Fred Zirdung');
+    set.add('Fred Zirdung');
+    set.remove('Danny Glover');
+    expect(set.size()).to.equal(2);
+  });
 
   it('should remove values from a set', function() {
     set.add('Mel Gibson');
     set.remove('Mel Gibson');
     expect(set.contains('Mel Gibson')).to.equal(false);
   });
+
+  it('should not add an item twice', function() {
+    set.add('Mel Gibson');
+    expect(set.add('Mel Gibson')).to.equal(false);
+    expect(set.size()).to.equal(1);    
+  });
   
+  it('should add two deeply equal arrays', function() {
+    set.add([1, 'dog', true]);
+    expect(set.add([1, 'dog', true])).to.not.equal(false);
+    expect(set.size()).to.equal(2);
+  });
+    
   it('should be able to add functions', function() {
     var a = function(x) {
       return x;
