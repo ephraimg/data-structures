@@ -88,8 +88,22 @@ HashTable.prototype.doubleIfNeeded = function() {
 };
 
 HashTable.prototype.halveIfNeeded = function() {
-  if (this._insertCount / this._limit >= 0.25) {
+  if (this._insertCount / this._limit <= 0.25) {
+    var temp = [];
+    this._storage.each(bucket => {
+      if (bucket) {
+        for (let i = 0; i < bucket.length; i++) {
+          temp.push(bucket[i]);
+        }
+      }
+    });
+    this._limit = this._limit / 2;
+    this._storage = LimitedArray(this._limit);
+    this._insertCount = 0;
     
+    for (let i = 0; i < temp.length; i++) {
+      this.insert(temp[i][0], temp[i][1]);
+    }
   }
 };
 

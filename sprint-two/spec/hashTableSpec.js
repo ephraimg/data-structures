@@ -76,7 +76,7 @@ describe('hashTable', function() {
     expect(hashTable._limit).to.equal(16);
   });
 
-  xit ('should halve in size when needed', function() {
+  it ('should halve in size when needed', function() {
     console.log('Double test over');
     _.each(people, function(person) {
       var firstName = person[0];

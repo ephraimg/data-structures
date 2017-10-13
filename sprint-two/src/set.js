@@ -7,15 +7,28 @@ var Set = function() {
 var setPrototype = {};
 
 setPrototype.add = function(item) {
-  this._storage[item] = item;
+  if (typeof item === 'function') {
+    this._storage[item.toString()] = item;
+  } else {
+    this._storage[JSON.stringify(item)] = item;
+  }
 };
 
 setPrototype.contains = function(item) {
-  return this._storage[item] !== undefined; 
+  if (typeof item === 'function') {
+    return this._storage[item.toString()] !== undefined;
+  } else {
+    return this._storage[JSON.stringify(item)] !== undefined;
+  }
 };
 
 setPrototype.remove = function(item) {
-  this._storage[item] = undefined;
+  if (typeof item === 'function') {
+    this._storage[item.toString()] = undefined;
+  } else {
+    this._storage[JSON.stringify(item)] = undefined;
+  }
+  
 };
 
 /*
