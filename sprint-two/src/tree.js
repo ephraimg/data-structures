@@ -27,6 +27,14 @@ treeMethods.contains = function(target) {
   return traverse(this);
 };
 
+treeMethods.traverse = function(cb) {
+  cb(this);
+  if (this.children.length !== 0) {
+    for (let i = 0; i < this.children.length; i++) {
+      this.children[i].traverse(cb);
+    }
+  }
+};
 
 
 /*

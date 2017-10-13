@@ -17,6 +17,21 @@ describe('hashTable', function() {
     hashTable.insert('Steven', 'Seagal');
     expect(hashTable.retrieve('Steven')).to.equal('Seagal');
   });
+  
+  it('should have a count of 0 after inserting and removing one value', function() {
+    hashTable.insert('Steven', 'Spielberg');
+    hashTable.remove('Steven');
+    expect(hashTable._insertCount).to.equal(0);
+  });
+  
+  it('should have a count of 7 after inserting 7 values', function() {
+    _.each(people, function(person) {
+      var firstName = person[0];
+      var lastName = person[1];
+      hashTable.insert(firstName, lastName);
+    });
+    expect(hashTable._insertCount).to.equal(7);
+  });
 
   it('should not contain values that were not inserted', function() {
     hashTable.insert('Steven', 'Spielberg');
@@ -48,17 +63,21 @@ describe('hashTable', function() {
   });
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
-  xit ('should double in size when needed', function() {
+  it ('should double in size when needed', function() {
+    console.log('Starting double in size test');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];
       hashTable.insert(firstName, lastName);
+      console.log('Spec: old hashtable storage: ', JSON.stringify(hashTable._storage));
+
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
     expect(hashTable._limit).to.equal(16);
   });
 
   xit ('should halve in size when needed', function() {
+    console.log('Double test over');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];

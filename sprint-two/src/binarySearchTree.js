@@ -22,26 +22,32 @@ BinarySearchTree.prototype.insert = function(value) {
         traverse(tree.right);
       }
     }
-  }; 
+  };
   traverse(this);  
+
+  // ATTEMPT TO REUSE DEPTHFIRSTLOG
+  // var insertTree = BinarySearchTree(value);
+  // this.depthFirstLog(function(val) {
+  //   if (value < val && this.left === undefined && ) {
+  //     this.left = insertTree;
+  //   }
+  //   if (value > val && this.right === undefined && ) {
+  //     this.right = insertTree;
+  //   }
+  // }).bind(this);
+  
 };
 
 BinarySearchTree.prototype.contains = function(value) {
   var arr = [];
-  this.depthFirstLog(function(value) {
-    arr.push(value);
-  });
+  this.depthFirstLog( value => arr.push(value) );
   return arr.includes(value);
 };
 
 BinarySearchTree.prototype.depthFirstLog = function(cb) {
   cb(this.value);
-  if (this.left) {
-    this.left.depthFirstLog(cb);
-  } 
-  if (this.right) {
-    this.right.depthFirstLog(cb);
-  }
+  if (this.left) { this.left.depthFirstLog(cb); } 
+  if (this.right) { this.right.depthFirstLog(cb); }
 };
 
 /*
