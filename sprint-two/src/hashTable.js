@@ -2,8 +2,6 @@ var HashTable = function() {
   this._insertCount = 0;
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
-  
-  // will need to do this again when resizing
   for (var i = 0; i < this._limit; i++) {
     this._storage.set(i, []);
   }
@@ -20,10 +18,10 @@ HashTable.prototype.insert = function(k, v) {
     }
   }
   if (!found) {
-    this._storage.get(index).push([k, v]); // now bucket should be [[k, v]]
+    this._storage.get(index).push([k, v]);
     this._insertCount++;
   }
-  if (this.needsDoubling()) { this.double(); }
+  this.doubleIfNeeded(); // ***
 };
 
 HashTable.prototype.retrieve = function(k) {
@@ -47,11 +45,7 @@ HashTable.prototype.remove = function(k) {
       }
     }
   }
-  if (this.needsHalving()) { this.halve(); }
-};
-
-HashTable.prototype.needsDoubling = function() {
-  return this._insertCount / this._limit > 0.75;
+  this.halveIfNeeded(); // ***
 };
 
 HashTable.prototype.saveTuples = function() {
@@ -66,33 +60,30 @@ HashTable.prototype.saveTuples = function() {
   return temp;
 };
 
-HashTable.prototype.double = function() {
-  var temp = this.saveTuples();
-  this._limit = this._limit * 2; 
+HashTable.prototype.refillFrom = function(array) {
   this._storage = LimitedArray(this._limit);
-  this._insertCount = 0;
+  this._insertCount = 0; // ***
   for (var i = 0; i < this._limit; i++) {
     this._storage.set(i, []);
   }
-  for (let i = 0; i < temp.length; i++) {
-    this.insert(temp[i][0], temp[i][1]);
+  for (let i = 0; i < array.length; i++) {
+    this.insert(array[i][0], array[i][1]);
   }
 };
 
-HashTable.prototype.needsHalving = function() {
-  return this._insertCount / this._limit < 0.25;
+HashTable.prototype.doubleIfNeeded = function() {
+  if (this._insertCount / this._limit > 0.75) {
+    var temp = this.saveTuples();
+    this._limit = this._limit * 2; 
+    this.refillFrom(temp);
+  }
 };
 
-HashTable.prototype.halve = function() {
-  var temp = this.saveTuples();
-  this._limit = this._limit / 2; 
-  this._storage = LimitedArray(this._limit);
-  this._insertCount = 0;
-  for (var i = 0; i < this._limit; i++) {
-    this._storage.set(i, []);
-  }
-  for (let i = 0; i < temp.length; i++) {
-    this.insert(temp[i][0], temp[i][1]);
+HashTable.prototype.halveIfNeeded = function() {
+  if (this._insertCount / this._limit < 0.25) {
+    var temp = this.saveTuples();
+    this._limit = this._limit / 2; 
+    this.refillFrom(temp);
   }
 };
 

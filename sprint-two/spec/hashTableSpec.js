@@ -64,29 +64,18 @@ describe('hashTable', function() {
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
   
-  // Doesn't work if the table correctly doubles when too full
-  it ('should detect on inserting whether it\'s too full', function() {
-    hashTable._insertCount = 7;
-    expect(hashTable.needsDoubling()).to.be.true;
-  });
-  
   it ('should create a new array with all the tuples', function() {
     hashTable.insert('Joe', 'Bloggs');
     hashTable.insert('Lamar', 'Alexander');
     hashTable.insert('Liz', 'Penny');
     hashTable.insert('Joe2', 'Bloggs2');
-    hashTable.insert('Joe3', 'Bloggs3');
+    hashTable.insert('Joe3', 'Bloggs3'); // *** don't insert too many!!!
     var temp = hashTable.saveTuples();
-    //console.log(JSON.stringify(temp));    
     expect(temp).to.eql([["Joe2","Bloggs2"],
       ["Joe3","Bloggs3"],["Lamar","Alexander"],
       ["Joe","Bloggs"],["Liz","Penny"]]);
   });
   
-  it ('should double in size', function() {
-    hashTable.double();
-    expect(hashTable._limit).to.equal(16);
-  });
     
   it ('should double in size when needed', function() {
     console.log('Starting double in size test');
@@ -94,10 +83,6 @@ describe('hashTable', function() {
       var firstName = person[0];
       var lastName = person[1];
       hashTable.insert(firstName, lastName);
-      //console.log('Spec: insertCount is: ', hashTable._insertCount);
-      //console.log('Spec: needsDoubling? ', hashTable.needsDoubling());
-      //JSON.stringify(hashTable._storage));
-
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
     expect(hashTable._limit).to.equal(16);
