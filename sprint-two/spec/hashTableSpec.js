@@ -64,20 +64,16 @@ describe('hashTable', function() {
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
   it ('should double in size when needed', function() {
-    console.log('Starting double in size test');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];
       hashTable.insert(firstName, lastName);
-      console.log('Spec: old hashtable storage: ', JSON.stringify(hashTable._storage));
-
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
     expect(hashTable._limit).to.equal(16);
   });
 
   it ('should halve in size when needed', function() {
-    console.log('Double test over');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];

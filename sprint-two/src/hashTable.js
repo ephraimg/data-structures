@@ -25,8 +25,6 @@ HashTable.prototype.insert = function(k, v) {
   }
   if (!found) {
     bucket.push([k, v]); // now bucket should be [[k, v]]
-    console.log('insert bucket: ', JSON.stringify(bucket));
-    console.log('insert storage: ', this._storage);
     this._insertCount++;
   }
   // this._storage.set(index, bucket [k, v]);
