@@ -46,11 +46,14 @@ describe('set', function() {
   });
     
   it('should be able to add functions', function() {
-    var a = function(x) {
-      return x;
-    };
+    var a = function(x) { return x; };
+    var b = function(a, b, c) { a.push(b.concat(c)); };
     set.add(a);
+    set.add(b);
+    set.add(Math.max);
     expect(set.contains(a)).to.equal(true);
+    expect(set.contains(b)).to.equal(true);
+    expect(set.contains(Math.max)).to.equal(true);
   });
   
   it('should be able to add arrays and objects', function() {
@@ -61,5 +64,7 @@ describe('set', function() {
     expect(set.contains(a)).to.equal(true);
     expect(set.contains(b)).to.equal(true);
   });
+  
+  
 
 });
