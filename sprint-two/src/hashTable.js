@@ -59,22 +59,26 @@ HashTable.prototype.remove = function(k) {
 };
 
 HashTable.prototype.doubleIfNeeded = function() {
-  if (this._insertCount / this._limit > 0.75) {
+  if (this._insertCount / this._limit >= 0.75) {
   // create temp storage array
     var temp = [];
     // get every pair in ht, push to temp
     this._storage.each(bucket => {
-      for (let i = 0; i < bucket.length; i++) {
-        temp.push(bucket[i]);
+      if (bucket) {
+        for (let i = 0; i < bucket.length; i++) {
+          temp.push(bucket[i]);
+        }
       }
+      
     });
     // remove every pair from ht
-    for (let i = 0; i < temp.length; i++) {
-      this._storage.remove(temp[i][0]);
-    }
+    // for (let i = 0; i < temp.length; i++) {
+    //   this._storage.remove(temp[i][0]);
+    // }
     // insert every pair from temp back into ht
     this._limit = this._limit * 2;
     this._storage = LimitedArray(this._limit);
+    this._insertCount = 0;
     
     for (let i = 0; i < temp.length; i++) {
       this.insert(temp[i][0], temp[i][1]);
@@ -84,7 +88,9 @@ HashTable.prototype.doubleIfNeeded = function() {
 };
 
 HashTable.prototype.halveIfNeeded = function() {
-  if (this._insertCount / this._limit > 0.75) console.log('Needs to be double');  
+  if (this._insertCount / this._limit >= 0.25) {
+    
+  }
 };
 
 /*
