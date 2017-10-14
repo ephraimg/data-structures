@@ -78,7 +78,6 @@ describe('hashTable', function() {
   
     
   it ('should double in size when needed', function() {
-    console.log('Starting double in size test');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];
@@ -89,7 +88,6 @@ describe('hashTable', function() {
   });
 
   it ('should halve in size when needed', function() {
-    console.log('Double test over');
     _.each(people, function(person) {
       var firstName = person[0];
       var lastName = person[1];

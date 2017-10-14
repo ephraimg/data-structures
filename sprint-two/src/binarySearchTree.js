@@ -36,12 +36,61 @@ BinarySearchTree.prototype.insert = function(value) {
   //   }
   // }).bind(this);
   
+  // if (this.needsRebalancing()) { this.rebalance(); }
+
 };
 
 BinarySearchTree.prototype.contains = function(value) {
   var arr = [];
   this.depthFirstLog( value => arr.push(value) );
   return arr.includes(value);
+};
+
+BinarySearchTree.prototype.getDepths = function() {
+  var min;
+  var max = 0;
+  var count = 0;
+  var side;
+  var maxSide = side;
+  var traverse = function(tree, count) {
+    if (tree.left !== undefined) {
+      if (count === 0) { side = 'left'; }
+      count++;
+      traverse(tree.left, count); 
+      count--;
+    } 
+    if (tree.right !== undefined) {
+      if (count === 0) { side = 'right'; }
+      count++; 
+      traverse(tree.right, count);
+      count--;
+    } 
+    if (tree.left === undefined && tree.right === undefined) { 
+      if (count > max) { 
+        max = count;
+        maxSide = side;
+      }
+      if (count < min || min === undefined ) { 
+        min = count; 
+      }
+    }
+  };
+  traverse(this, count);
+  console.log('min', min, 'max', max, 'maxSide', maxSide);
+  return {'min': min, 'max': max, 'maxSide': maxSide};
+};
+
+BinarySearchTree.prototype.needsRebalancing = function() {
+  var depths = this.getDepths();
+  return depths.max > 2 * depths.min;
+};
+
+BinarySearchTree.prototype.rebalance = function(heavySide) {
+  lightSide = heavySide === 'left' ? 'right' : 'left';
+  var h = this[heavySide];
+  this[heavySide] = this[heavySide][lightSide];
+  // this.value = this[heavySide].value;
+  h[lightSide] = this;  
 };
 
 BinarySearchTree.prototype.depthFirstLog = function(cb) {
