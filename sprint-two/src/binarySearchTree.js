@@ -85,13 +85,13 @@ BinarySearchTree.prototype.needsRebalancing = function() {
   return depths.max > 2 * depths.min;
 };
 
-BinarySearchTree.prototype.rebalance = function(heavySide) {
-  lightSide = heavySide === 'left' ? 'right' : 'left';
-  var h = this[heavySide];
-  this[heavySide] = this[heavySide][lightSide];
-  // this.value = this[heavySide].value;
-  h[lightSide] = this;  
-};
+// BinarySearchTree.prototype.rebalance = function(heavySide) {
+//   lightSide = heavySide === 'left' ? 'right' : 'left';
+//   var h = this[heavySide];
+//   this[heavySide] = this[heavySide][lightSide];
+//   // this.value = this[heavySide].value;
+//   h[lightSide] = this;  
+// };
 
 BinarySearchTree.prototype.depthFirstLog = function(cb) {
   cb(this.value);
@@ -100,7 +100,6 @@ BinarySearchTree.prototype.depthFirstLog = function(cb) {
 };
 
 BinarySearchTree.prototype.breadthFirstLog = function(cb) {
-  // debugger;
   var queue = [];
   var enqueue = val => queue.push(val);
   var dequeue = () => queue.shift();

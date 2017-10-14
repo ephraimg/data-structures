@@ -44,6 +44,13 @@ describe('set', function() {
     expect(set.add([1, 'dog', true])).to.not.equal(false);
     expect(set.size()).to.equal(2);
   });
+
+  it('should not add two strictly identical arrays', function() {
+    var testArray = [1, 'dog', true];
+    set.add(testArray);
+    expect(set.add(testArray)).to.equal(false);
+    expect(set.size()).to.equal(1);
+  });
     
   it('should be able to add functions', function() {
     var a = function(x) { return x; };
