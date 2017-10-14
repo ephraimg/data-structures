@@ -79,7 +79,7 @@ describe('binarySearchTree', function() {
     expect(binarySearchTree.needsRebalancing()).to.be.true;
   });
   
-  it('should be rebalance', function() {
+  xit('should rebalance', function() {
     binarySearchTree.insert(2);
     binarySearchTree.insert(7);
     binarySearchTree.insert(6);
@@ -93,5 +93,18 @@ describe('binarySearchTree', function() {
     expect(binarySearchTree.right.value).to.equal(8);
     expect(binarySearchTree.right.right.value).to.equal(10);
   });
-    
+
+  it('should breadth first log', function() {
+    binarySearchTree.insert(2);
+    binarySearchTree.insert(1);
+    binarySearchTree.insert(0);
+    binarySearchTree.insert(7);
+    binarySearchTree.insert(6);
+    binarySearchTree.insert(8);
+    binarySearchTree.insert(10);
+    var array = [];
+    var func2 = function(tree) { array.push(tree.value); };   
+    binarySearchTree.breadthFirstLog(func2); 
+    expect(array).to.eql([5, 2, 7, 1, 6, 8, 0, 10]);
+  });
 });

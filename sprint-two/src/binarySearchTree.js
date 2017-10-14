@@ -99,6 +99,23 @@ BinarySearchTree.prototype.depthFirstLog = function(cb) {
   if (this.right) { this.right.depthFirstLog(cb); }
 };
 
+BinarySearchTree.prototype.breadthFirstLog = function(cb) {
+  // debugger;
+  var queue = [];
+  var enqueue = val => queue.push(val);
+  var dequeue = () => queue.shift();
+  enqueue(this);
+  while (queue.length > 0) {
+    queue.forEach(() => {
+      var dequeued = dequeue();
+      cb(dequeued);
+      if (dequeued.left) { enqueue(dequeued.left); }
+      if (dequeued.right) { enqueue(dequeued.right); }
+    });
+  }
+};
+
+
 /*
  * Complexity: What is the time complexity of the above functions?
  */
