@@ -18,6 +18,15 @@ treeMethods.addChild = function(value) {
 treeMethods.removeFromParent = function() {
   var idx = this.parent.children.indexOf(this);
   this.parent.children.splice(idx, 1);
+  // if (this.children.length > 0) {
+  //   this.children.forEach(function(tree) {
+  //     tree.parent = this.parent;
+  //     this.parent.children.push(tree);
+  //   }, this);
+  // }
+  /* :top: this is actually not supposed to happen, but Alan 
+  told me to finish it
+  */ 
   this.parent = null;
 };
 

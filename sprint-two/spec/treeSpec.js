@@ -29,6 +29,34 @@ describe('tree', function() {
     expect(tree.children[2].children.length).to.equal(1);    
   });
 
+  it('should detach a child from its parent', function() {
+    tree.addChild(5);
+    tree.addChild(2);
+    tree.addChild(1);
+    tree.addChild(4);
+    tree.children[2].addChild(3);
+    tree.children[2].addChild(8);
+    tree.children[2].children[0].removeFromParent();
+    expect(tree.children[2].children.length).to.equal(1);
+    expect(tree.children[2].children[0].value).to.equal(8);    
+  });
+
+  // Below is not intended behavior
+  xit('it should reattach children to new parent on parent removal', function() {
+    tree.addChild(5);
+    tree.addChild(2);
+    tree.addChild(1);
+    tree.children[0].addChild(4);
+    tree.children[0].addChild(3);
+    tree.children[0].children[1].addChild(6);
+    tree.children[0].children[1].addChild(9);
+    tree.children[0].children[1].removeFromParent();
+    expect(tree.children[0].children.length).to.equal(3);
+    expect(tree.children[0].children[0].value).to.equal(4);
+    expect(tree.children[0].children[1].value).to.equal(6); 
+    expect(tree.children[0].children[2].value).to.equal(9);    
+  });
+
   it('should return true for a value that the tree contains', function() {
     tree.addChild(5);
     expect(tree.contains(5)).to.equal(true);

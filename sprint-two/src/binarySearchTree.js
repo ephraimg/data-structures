@@ -76,7 +76,7 @@ BinarySearchTree.prototype.getDepths = function() {
     }
   };
   traverse(this, count);
-  console.log('min', min, 'max', max, 'maxSide', maxSide);
+  // console.log('min', min, 'max', max, 'maxSide', maxSide);
   return {'min': min, 'max': max, 'maxSide': maxSide};
 };
 

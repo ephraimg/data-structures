@@ -54,6 +54,30 @@ var getIndexBelowMaxForKey = function(str, max) {
   return hash % max;
 };
 
+
+// http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
+var getDJB2Index = function(str, max) {
+  var hash = 5381;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash << 5) + hash) + char; /* hash * 33 + c */
+  }
+  return hash % max;
+};
+
+// http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
+var getSDBMIndex = function(str, max) {
+  var hash = 0;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = char + (hash << 6) + (hash << 16) - hash;
+  }
+  return hash % max;
+};
+
+
+
+
 /*
  * Complexity: What is the time complexity of the above functions?
  */
