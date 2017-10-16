@@ -13,46 +13,47 @@ describe('bloomFilter', function() {
   });
   
   it('should tell that it (definitely) doesn\'t contains an unadded value', function() {
+    // This test will sometimes fail, but only very rarely
     expect(bloomFilter.query('hello')).to.be.false;
   });
   
   it('should tell that it (probably) contains a previously added value', function() {
     bloomFilter.insert('hello');
+    bloomFilter.insert('weg9876eg2');
+    bloomFilter.insert('dge23r23');
+    expect(bloomFilter.query('weg9876eg2')).to.be.true;
     expect(bloomFilter.query('hello')).to.be.true;
+    expect(bloomFilter.query('dge23r23')).to.be.true;
   });
   
   
-  it('should get tested', function() {
-    // storage for results
-    var nums = [];
-    var posNums = [];
-    for (var i = 0; i < 5; i++) {
-      var idx = Math.floor(Math.random * 8).toString();
-      bloomFilter.insert(idx.toString());
-      nums.push(idx);
-      if (bloomFilter.query(idx)) {
-        posNums.push(idx);
+  it('should have the correct rate of false positives', function() {
+    var getRand = function() { // Random string generator from StackOverflow
+      return Math.random().toString(36).replace('0.', '');
+    };
+    var falsePosCount = 0;
+    for (var j = 0; j < 10000; j++) {
+      var bloomFilter = new BloomFilter();
+      var rands = [];
+      for (var i = 0; i < 4; i++) { 
+        rands.push(getRand());
+        rands.push(getRand());
+        rands.push(getRand());
+        rands.push(getRand());
+        bloomFilter.insert(rands[0]);
+        bloomFilter.insert(rands[1]);
+        bloomFilter.insert(rands[2]);
+        bloomFilter.insert(rands[3]);
+      }
+      var falseRand = getRand();
+      if (bloomFilter.query(falseRand) && !rands.includes(falseRand)) {
+        falsePosCount++;
       }
     }
-    console.log(JSON.stringify(nums));
-    console.log(JSON.stringify(posNums));
-    expect(nums.length).to.equal(5);
+    // With 18 bits, 3 hash functions, 4 items stored, expect 0.12 chance false pos
+    expect(falsePosCount / 10000).to.be.within(0.10, 0.14);
   });
 
-  
-  
-  
-
-  xit('should store values that were inserted', function() {
-    bloomFilter.insert('Steven', 'Seagal');
-    expect(bloomFilter.retrieve('Steven')).to.equal('Seagal');
-  });
-  
-  xit('should have a count of 0 after inserting and removing one value', function() {
-    bloomFilter.insert('Steven', 'Spielberg');
-    bloomFilter.remove('Steven');
-    expect(bloomFilter._insertCount).to.equal(0);
-  });
   
   xit('should have a count of 7 after inserting 7 values', function() {
     _.each(people, function(person) {
@@ -61,11 +62,6 @@ describe('bloomFilter', function() {
       bloomFilter.insert(firstName, lastName);
     });
     expect(bloomFilter._insertCount).to.equal(7);
-  });
-
-  xit('should not contain values that were not inserted', function() {
-    bloomFilter.insert('Steven', 'Spielberg');
-    expect(bloomFilter.retrieve('Steven')).not.to.equal('Seagal');
   });
 
   xit('should handle hash function collisions', function() {
@@ -81,19 +77,6 @@ describe('bloomFilter', function() {
   });
 
   // (Advanced! Remove the extra "x" when you want the following tests to run)
-  
-  xit ('should create a new array with all the tuples', function() {
-    bloomFilter.insert('Joe', 'Bloggs');
-    bloomFilter.insert('Lamar', 'Alexander');
-    bloomFilter.insert('Liz', 'Penny');
-    bloomFilter.insert('Joe2', 'Bloggs2');
-    bloomFilter.insert('Joe3', 'Bloggs3'); // *** don't insert too many!!!
-    var temp = bloomFilter.saveTuples();
-    expect(temp).to.eql([["Joe2","Bloggs2"],
-      ["Joe3","Bloggs3"],["Lamar","Alexander"],
-      ["Joe","Bloggs"],["Liz","Penny"]]);
-  });
-  
     
   xit ('should double in size when needed', function() {
     _.each(people, function(person) {
@@ -120,4 +103,5 @@ describe('bloomFilter', function() {
     bloomFilter.remove('Mr.');
     expect(bloomFilter._limit).to.equal(8);
   });
+
 });
