@@ -42,12 +42,12 @@ HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
   var bucket = this._storage.get(index);
   if (bucket !== undefined) { // We only created a bucket if we inserted
-    for (var i = 0; i < bucket.length; i++) {
-      if (bucket[i][0] === k) {
-        bucket.splice(i, 1);
+    bucket.forEach((tuple, idx) => {
+      if (tuple[0] === k) {
+        bucket.splice(idx, 1);
         this._insertCount--;
       }
-    }
+    });
   }
   this.halveIfNeeded(); // Needs to be here at bottom
 };
@@ -56,9 +56,7 @@ HashTable.prototype.saveTuples = function() {
   var temp = [];
   this._storage.each((bucket, idx) => {
     if (bucket !== undefined) { // We only created a bucket if we inserted
-      for (let i = 0; i < bucket.length; i++) {
-        temp.push(bucket[i]);
-      }
+      bucket.forEach(tuple => temp.push(tuple));
     }
   });
   return temp;
