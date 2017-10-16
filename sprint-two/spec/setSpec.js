@@ -17,6 +17,15 @@ describe('set', function() {
     expect(set.contains('Danny Glover')).to.equal(true);
     expect(set.contains('Susan Sarandon')).to.equal(true);
   });
+  
+  it('should count the values added to a set', function() {
+    set.add('Susan Sarandon');
+    set.add('Danny Glover');
+    set.add('Fred Zirdung');
+    set.add('Fred Zirdung');
+    set.remove('Danny Glover');
+    expect(set.size()).to.equal(2);
+  });
 
   it('should remove values from a set', function() {
     set.add('Mel Gibson');
@@ -24,17 +33,43 @@ describe('set', function() {
     expect(set.contains('Mel Gibson')).to.equal(false);
   });
 
-  it('should add non-string values to a set', function() {
-    set.add(123);
-    set.add(9.006);
-    expect(set.contains(123)).to.equal(true);
-    expect(set.contains(9.006)).to.equal(true);
+  it('should not add an item twice', function() {
+    set.add('Mel Gibson');
+    expect(set.add('Mel Gibson')).to.equal(false);
+    expect(set.size()).to.equal(1);    
+  });
+  
+  it('should add two deeply equal arrays', function() {
+    set.add([1, 'dog', true]);
+    expect(set.add([1, 'dog', true])).to.not.equal(false);
+    expect(set.size()).to.equal(2);
   });
 
-  it('should add non-string values to a set', function() {
-    set.add(9.006);
-    set.remove(9.006);
-    expect(set.contains(9.006)).to.equal(false);
+  it('should not add two strictly identical arrays', function() {
+    var testArray = [1, 'dog', true];
+    set.add(testArray);
+    expect(set.add(testArray)).to.equal(false);
+    expect(set.size()).to.equal(1);
   });
-
+    
+  it('should be able to add functions', function() {
+    var a = function(x) { return x; };
+    var b = function(a, b, c) { a.push(b.concat(c)); };
+    set.add(a);
+    set.add(b);
+    set.add(Math.max);
+    expect(set.contains(a)).to.equal(true);
+    expect(set.contains(b)).to.equal(true);
+    expect(set.contains(Math.max)).to.equal(true);
+  });
+  
+  it('should be able to add arrays and objects', function() {
+    var a = { 'a': true, '1234': 'bob'};
+    var b = [4, 7, 'hello', false];
+    set.add(a);
+    set.add(b);
+    expect(set.contains(a)).to.equal(true);
+    expect(set.contains(b)).to.equal(true);
+  });
+  
 });
